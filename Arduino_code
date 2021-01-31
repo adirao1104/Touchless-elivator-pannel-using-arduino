@@ -1,0 +1,111 @@
+//Developed by Ranganath Rao Aditya & Joseph Jeyanathan Nirmalray
+
+#include "SD.h"// Initialising the SD card Library
+#include "TMRpcm.h"// Initialising the  Adudio player library for Speaker output Library
+#include "SPI.h"// Initialising the SPI Interface Library for SD card 
+#define SD_ChipSelectPin 4// Initialising Chip select PIN to PIN 4 of Arduino for SD card 
+#define BEGIN { //Initialising the Open bracket as BEGIN
+#define END }//Initialising the Close bracket as END
+
+ 
+TMRpcm tmrpcm;//Crearting a object tmepcm from class TMRpcm from library TMRpcm.h
+unsigned long time = 0;//Initialising the time variable as a long usingned with Null value
+
+ 
+class audiofile BEGIN //Creating a class audiofile to store and call the speaker fnctionality in the program only when needed
+  public:
+ 
+  void floor1()BEGIN//Fuction inside class for floor 1
+  const char wav1[]  = BEGIN "1st.wav" END;//Initialisating the audio for the respective floor
+    tmrpcm.setVolume(5);//Initiallisationof speaker amplifier output maximum volume
+    tmrpcm.play(wav1);//caling the play fuction from the class
+      END
+    void floor2()BEGIN//Fuction inside class for floor 2
+    //Initialisating the audio for the respective floor
+    tmrpcm.setVolume(5);//Initiallisationof speaker amplifier output maximum volume
+    tmrpcm.play("2nd.wav");//caling the play fuction from the class
+    
+    END
+    void floor3()BEGIN//Fuction inside class for floor 3
+     tmrpcm.setVolume(5);//Initiallisationof speaker amplifier output maximum volume
+    tmrpcm.play("3rd.wav");//caling the play fuction from the class
+    END
+    void floor4()BEGIN//Fuction inside class for floor 4
+     tmrpcm.setVolume(5);//Initiallisationof speaker amplifier output maximum volume
+    tmrpcm.play("4th.wav");//caling the play fuction from the class
+    END
+    void floor5()BEGIN//Fuction inside class for floor 5
+     tmrpcm.setVolume(5);//Initiallisationof speaker amplifier output maximum volume
+    tmrpcm.play("5th.wav");//caling the play fuction from the class
+    END
+    void alarm()BEGIN//Fuction inside class for floor alarm
+     tmrpcm.setVolume(5);//Initiallisationof speaker amplifier output maximum volume
+    tmrpcm.play("alarm.wav");//caling the play fuction from the class
+    END
+    
+  END;
+  
+void setup()BEGIN//Void Setup for initial setup of PINS and Baud rate for Arduino Input and Output
+tmrpcm.speakerPin = 9;
+  pinMode(A0,INPUT);//PIN Output for Floor 1
+  pinMode(A1,INPUT);//PIN Output for Floor 2
+  pinMode(A2,INPUT);//PIN Output for Floor 3
+  pinMode(A3,INPUT);//PIN Output for Floor 4
+  pinMode(A4,INPUT);//PIN Output for Floor 5
+  pinMode(A5,INPUT);//PIN Output for alarm
+  Serial.begin(9600);//Setting Baud Rate to 9600
+if (!SD.begin(SD_ChipSelectPin)) BEGIN//Condition to check if the SD Card is connected and communicating with Arduino
+Serial.println("SD fail");//Condition for Faliure of connection with Arduino
+return;
+
+END
+else
+BEGIN 
+Serial.println("SD deducted");//Condition for Successfull connection with Arduino
+END
+END
+void loop()BEGIN //Void Loop for Main functinality
+audiofile play;//Initialisation of Object play from class audiofile Initialised above
+ if (digitalRead(A0) == 0 )//Condition detecting if the Sensor dectects input from sensor connected to A0 PIN
+  BEGIN
+    Serial.write("0x01");
+    play.floor1();//Fuction to call from the class audiofile to play the concerned audio
+    delay(1000);   
+    
+  END
+  else if (digitalRead(A1) == 0)//Condition detecting if the Sensor dectects input from sensor connected to A1 PIN
+  BEGIN
+    Serial.write("0x02");
+     play.floor2();//Fuction to call from the class audiofile to play the concerned audio
+      delay(1000);  
+  END
+  else if (digitalRead(A2) == LOW)//Condition detecting if the Sensor dectects input from sensor connected to A2 PIN
+  BEGIN
+Serial.write("0x03"); 
+     play.floor3();//Fuction to call from the class audiofile to play the concerned audio
+      delay(1000);  
+  END
+  else if (digitalRead(A3) == LOW)//Condition detecting if the Sensor dectects input from sensor connected to A3 PIN
+  BEGIN
+    Serial.write("0x04");
+     play.floor4();//Fuction to call from the class audiofile to play the concerned audio
+     delay(1000);  
+  END
+  else if (digitalRead(A4) == LOW)//Condition detecting if the Sensor dectects input from sensor connected to A4 PIN
+  BEGIN
+     Serial.write("0x05");
+     play.floor5();//Fuction to call from the class audiofile to play the concerned audio
+      delay(1000);  
+  END
+  else if (digitalRead(A5) == LOW)//Condition detecting if the Sensor dectects input from sensor connected to A5 PIN
+  BEGIN
+     Serial.write("0x06");
+     play.alarm();//Fuction to call from the class audiofile to play the concerned audio
+     delay(1000);  
+  END
+  else
+  BEGIN
+   
+     //Serial.println("nothing is on");// Condition that determines no pin is detected by the Arduino which is ideal state
+  END
+END
