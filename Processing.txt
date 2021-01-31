@@ -1,0 +1,194 @@
+//Developed by Ranganath Rao Adity and Joseph Nirmalraj JEYANATHAN
+
+import processing.serial.*; //Defining the package for serial port 
+Serial myPort;  //definition of serial 
+int val; //assignment val as variable which received from serial port
+float y; //Its a main variable which initiate moveable object for Y coordinate
+float speed1; //Speed adjustment for the movable object
+PFont font1, font2, font3, font4, font5, font6, font7, font8, font9, font10, font11, font12, font13, font14; //Font creation for the utilization of characters over GUI
+PImage escalarma; //Import image from the data folder 
+float a = 820; //a,b,c,d are the assignment for software reset parameter
+float b = 350;
+float c = 150;
+float d = 50;
+
+void setup() {
+  size(1000,600); //creation of GUI outer layer 
+  font1= loadFont("firstfont.vlw"); //loading the saved font for use over GUI font1 to 14 is been created and saved into data folder 
+  font2= loadFont("twofont.vlw");
+  font3= loadFont("threefont.vlw");
+  font4= loadFont("fourfont.vlw");
+  font5= loadFont("fivefont.vlw");
+  font6= loadFont("sixthfont.vlw");
+  font7= loadFont("seventhfont.vlw");
+  font8= loadFont("eighthfont.vlw");
+  font9= loadFont("ninthfont.vlw");
+  font10= loadFont("tenthfont.vlw");
+  font11= loadFont("eleventhfont.vlw");
+  font12= loadFont("twelethfont.vlw");
+  font13= loadFont("thirteenthfloor.vlw");
+  font14= loadFont("fourteenthfont.vlw");
+  escalarma= loadImage("Elevator5.png");  //loading the image which is compatible format for processing 
+  speed1 = -1; //Assigning speed parameter for the increment from lower to upper
+  y=530; //setting movable object default value from the bottom of Y coordinate 
+ 
+  String portName = Serial.list()[0]; //comport definition for the connected port 1
+myPort = new Serial(this, portName, 9600); //definition of the myport baud rate, name which is serial, this means which is connected now, in last instances 
+}
+void move(int x){    //function move used for the lift up movement by Y coordinate and till x value 
+  fill(66,250,97);   //color change when levels set 
+  ellipse(210,x,20,50); //Placing the sensor Level RHS//
+  fill(66,250,97);    //color change when level set
+  ellipse(790,x,20,50); //Placing the sensor Level LHS//
+   fill(39,106,160);   //color change when level set
+  rect(210,y,580,20); //third rectangle which is moveable//
+    y=y+speed1;       //adjusting y coordinate with speed increment 
+    if(y<=x) {        //y coordinate moves till when achieving x value    
+    speed1 = -speed1; 
+    y=x;              //assigning x value to y because GUI should understand the movable object when to stop 
+    }
+    if(y==x) {        //when it reaches x value, then stopping the movable object at right place for the next input 
+    speed1 = -speed1;
+    }
+   fill(0);  //color change when level set 
+ }
+void draw() {
+  background(21,106,140);  //Whole background color 
+  fill(252,255,255);       //filling color for the text font  
+  textFont(font1,32);      //sizing of the font  
+  text("TOUCHLESS ELEVATOR PANEL", 260, 36);  //entering text for the created font and placing as per x and y cordinate 
+  textFont(font2,24);
+  text("Legends", 60, 236);
+  textFont(font2,18.5);
+  text("Elevator Level Indicator", 815, 236);
+  textFont(font3,18);
+  text("- Elevator Active", 50, 290);
+  textFont(font4,18);
+  text("- Level Set", 50, 350);
+  textFont(font5,18);
+  text("- Alarm Activated", 50, 410);
+  fill(246,250,35); //Yellow
+  ellipse(30,290,30,40); //Placing legends for yellow // ellipse used for legends, its a indicator for elevator action 
+   fill(66,250,97); //green
+  ellipse(30,350,30,40); //Placing legends for green 
+   fill(255,35,50); //red
+  ellipse(30,410,30,40); //Placing legends for red 
+  
+  fill(153);                                              
+  rect(200,50,600,500); //placing rectangle first one after GUI size//
+  fill(255);
+  rect(220,70,560,460); //placing rectangle second one after first rectangle//
+  image(escalarma, 220, 70); //loading the image inside the second rectangle 
+  fill(39,106,160); 
+  rect(210,y,580,20); //placing third rectangle which is moveable//
+  fill(160,245,247);
+  rect(a,b,c,d); //placing Fifth rectangle which is reset button//
+  fill(0);
+  textFont(font14,16);
+  text("Click here for Reset", 830,380);
+  fill(160,245,247);
+  rect(820,250,150,50); //placing fourth rectangle which is progress indication//
+  if(val<=48){
+  fill(0);
+  textFont(font6,18);
+  text("At Ground Level", 830, 290);
+  
+  }
+  fill(246,250,35);
+  ellipse(210,480,20,50); //Placing the sensor Level 1 ring rHS//
+        fill(246,250,35);
+  ellipse(790,480,20,50); //Placing the sensor Level 1 ring LHS//
+        fill(246,250,35);
+  ellipse(210,390,20,50); //Placing the sensor Level 2 ring rHS//
+       fill(246,250,35);
+  ellipse(790,390,20,50); //Placing the sensor Level 2 ring LHS//
+        fill(246,250,35);
+  ellipse(210,300,20,50); //Placing the sensor Level 3 ring rHS//
+      fill(246,250,35);
+  ellipse(790,300,20,50); //Placing the sensor Level 3 ring LHS//
+       fill(246,250,35);
+  ellipse(210,220,20,50); //Placing the sensor Level 4 ring rHS//
+        fill(246,250,35);
+  ellipse(790,220,20,50); //Placing the sensor Level 4 ring LHS//
+        fill(246,250,35);
+  ellipse(210,130,20,50); //Placing the sensor Level 5 ring rHS//
+       fill(246,250,35);
+  ellipse(790,130,20,50); //Placing the sensor Level 5 ring LHS//
+
+ if ( myPort.available() >0) //connect myport when port value is available 
+ {  // If data is available,
+  val = myPort.read();     // read it and store it in val variable
+//println(val); //print it out in the console  
+  } 
+    //Conditions when each sensors elevaor level set
+    
+      if(val==49) { //Level 1 sensor activated//
+        move(480);  //calling move function for the lift movement 
+                        
+        textFont(font6,20);
+        text("At Level 1", 830, 290);
+  }
+      if(val==50) { //Level 2 sensor activated//
+        move(390);
+        textFont(font7,20);
+        text("At Level 2", 830, 290);
+  }
+      if(val==51) { //Level 3 sensor activated//
+        move(300);
+            
+        textFont(font8,20);
+        text("At Level 3", 830, 290);
+  }
+     if(val==52) { //Level 4 sensor activated//
+        move(220);
+                   
+        textFont(font9,20);
+        text("At Level 4", 830, 290);
+  }
+      if(val==53) { //Level 5 sensor activated//
+        move(130);
+       
+        textFont(font10,20);
+        text("At Level 5", 830, 290);
+  }
+      if(val==54) { //Alarm sensor activated//
+      fill(255,35,50);
+      rect(210,y,580,20); //third rectangle which is moveable//
+      fill(255,35,50);
+      ellipse(210,480,20,50); //overwriting the sensor Level 1 ring rHS//
+      fill(255,35,50);
+      ellipse(790,480,20,50); //overwriting the sensor Level 1 ring LHS//
+      fill(255,35,50);
+      ellipse(210,390,20,50); //overwriting the sensor Level 2 ring rHS//
+      fill(255,35,50);
+      ellipse(790,390,20,50); //overwriting the sensor Level 2 ring LHS//
+      fill(255,35,50);
+      ellipse(210,300,20,50); //overwriting the sensor Level 3 ring rHS//
+      fill(255,35,50);
+      ellipse(790,300,20,50); //overwriting the sensor Level 3 ring LHS//
+      fill(255,35,50);
+      ellipse(210,220,20,50); //overwriting the sensor Level 4 ring rHS//
+      fill(255,35,50);
+      ellipse(790,220,20,50); //overwriting the sensor Level 4 ring LHS//
+      fill(255,35,50);
+      ellipse(210,130,20,50); //overwriting the sensor Level 5 ring rHS//
+      fill(255,35,50);
+      ellipse(790,130,20,50); //overwriting the sensor Level 5 ring LHS//
+      fill(0);
+      textFont(font10,20);
+      text("Alarm Activated", 830, 290);
+      }             
+      if(mousePressed){   //For the fivth rectangle button type, setting the condition when mouse is pressed and action to take place
+        if(mouseX>a && mouseX <a+c && mouseY>b && mouseY <b+d){
+        val=48;           //value 48 or less than that is considered as null value, in which GUI should replace to its initial condition          
+        y=530;            //setting the third rectangle moveable condition as initial value
+        //println("The mouse is pressed and over the button");
+        fill(255);
+
+      }
+      }
+   
+ }
+ 
+
+     
